@@ -843,6 +843,11 @@ def udp(q, where, timeout=DNS_QUERY_TIMEOUT, port=53,
                 if not q.is_response(r):
                     raise dns.query.BadResponse()
                 break
+            except dns.message.Truncated as e:
+                if ignore_errors and not q.is_response(e.message()):
+                    continue
+                else:
+                    raise
             except Exception:
                 if ignore_errors:
                     continue
